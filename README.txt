@@ -1,5 +1,7 @@
 Correction TD/TP - Piles, files et deques (C11)
 
+Auteur : Mohamed ED Deryouch — GLSID
+
 Bibliotheque du cours (sections 2 a 5) :
   ds_status.h, stack.h/stack_array.c/stack_list.c, queue.h/queue_circ.c/queue_list.c,
   deque.h/deque_circ.c, util.h (affichage des traces)
