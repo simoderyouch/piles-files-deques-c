@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "expr.h"
 
+/** Asserts that expression s evaluates to the expected real value. */
 static void ok(const char *s, double expected)
 {
     double r = 0;
@@ -13,6 +14,7 @@ static void ok(const char *s, double expected)
         assert(0);
     }
 }
+/** Asserts that expression s fails with the expected status. */
 static void err(const char *s, DsStatus expected)
 {
     double r = 0;
@@ -21,6 +23,7 @@ static void err(const char *s, DsStatus expected)
     if (st != expected) { printf("ECHEC : \"%s\" st=%d attendu=%d\n", s, (int)st, (int)expected); assert(0); }
 }
 
+/** Runs lexical, bracket, precedence, unary-operator and error tests. */
 int main(void)
 {
     size_t pos = 99;

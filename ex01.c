@@ -20,6 +20,7 @@
 #include "util.h"
 #include <stdio.h>
 
+/** Demonstrates the LIFO behavior of a stack and its empty-state errors. */
 int main(void) {
   Stack *s = stack_create();
   if (s == NULL) {

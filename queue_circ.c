@@ -4,6 +4,7 @@
 #define QUEUE_INITIAL_CAPACITY 4
 struct Queue { Item *data; size_t cap; size_t head; size_t size; };
 
+/** Allocates an empty queue and its initial circular buffer. */
 Queue *queue_create(void)
 {
     Queue *q = malloc(sizeof *q);
@@ -15,11 +16,15 @@ Queue *queue_create(void)
     q->size = 0;
     return q;
 }
+/** Releases the circular buffer and queue object. */
 void queue_destroy(Queue *q) { if (q == NULL) return; free(q->data); free(q); }
+/** Tests whether the queue contains no elements. */
 bool queue_is_empty(const Queue *q) { return q->size == 0; }
+/** Returns the number of elements in FIFO order. */
 size_t queue_size(const Queue *q) { return q->size; }
 
 /* On "deplie" l'anneau : un realloc simple casserait l'ordre. */
+/** Doubles capacity while copying logical FIFO order from the ring. */
 static DsStatus grow(Queue *q)
 {
     if (q->cap > (size_t)-1 / 2 ||
@@ -35,6 +40,7 @@ static DsStatus grow(Queue *q)
     q->head = 0;
     return DS_OK;
 }
+/** Writes x after the logical tail, growing the ring if necessary. */
 DsStatus queue_enqueue(Queue *q, Item x)
 {
     if (q->size == q->cap) {
@@ -45,6 +51,7 @@ DsStatus queue_enqueue(Queue *q, Item x)
     q->size++;
     return DS_OK;
 }
+/** Removes the logical head and advances the ring head index. */
 DsStatus queue_dequeue(Queue *q, Item *out)
 {
     if (q->size == 0) return DS_EMPTY;
@@ -53,6 +60,7 @@ DsStatus queue_dequeue(Queue *q, Item *out)
     q->size--;
     return DS_OK;
 }
+/** Reads the logical head without removing it. */
 DsStatus queue_front(const Queue *q, Item *out)
 {
     if (q->size == 0) return DS_EMPTY;

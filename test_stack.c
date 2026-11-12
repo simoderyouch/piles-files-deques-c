@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "stack.h"
 
+/** Exercises both stack implementations through the common public interface. */
 int main(void)
 {
     Stack *s = stack_create();

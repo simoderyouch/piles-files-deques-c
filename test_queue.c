@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "queue.h"
 
+/** Exercises wrapping, growth, reuse and empty-queue behavior. */
 int main(void)
 {
     Queue *q = queue_create();

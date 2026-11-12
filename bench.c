@@ -10,6 +10,7 @@
 #define IMPL_NAME "?"
 #endif
 
+/** Returns the current UTC clock value converted to milliseconds. */
 static double now_ms(void)
 {
     struct timespec ts;
@@ -17,6 +18,7 @@ static double now_ms(void)
     return (double)ts.tv_sec * 1e3 + (double)ts.tv_nsec / 1e6;
 }
 
+/** Benchmarks push/pop and enqueue/dequeue for the selected implementation. */
 int main(int argc, char **argv)
 {
     long n = (argc > 1) ? atol(argv[1]) : 5000000L;

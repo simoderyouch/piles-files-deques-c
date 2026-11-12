@@ -4,6 +4,7 @@
 typedef struct Node { Item value; struct Node *next; } Node;
 struct Queue { Node *head; Node *tail; size_t size; };
 
+/** Allocates an empty linked queue with head and tail set to NULL. */
 Queue *queue_create(void)
 {
     Queue *q = malloc(sizeof *q);
@@ -12,6 +13,7 @@ Queue *queue_create(void)
     q->size = 0;
     return q;
 }
+/** Frees all nodes in FIFO order and then the queue object. */
 void queue_destroy(Queue *q)
 {
     if (q == NULL) return;
@@ -19,8 +21,11 @@ void queue_destroy(Queue *q)
     while (cur != NULL) { Node *next = cur->next; free(cur); cur = next; }
     free(q);
 }
+/** Tests whether the head pointer is NULL. */
 bool queue_is_empty(const Queue *q) { return q->head == NULL; }
+/** Returns the number of linked nodes. */
 size_t queue_size(const Queue *q) { return q->size; }
+/** Allocates a node and attaches it after the current tail. */
 DsStatus queue_enqueue(Queue *q, Item x)
 {
     Node *n = malloc(sizeof *n);
@@ -32,6 +37,7 @@ DsStatus queue_enqueue(Queue *q, Item x)
     q->size++;
     return DS_OK;
 }
+/** Removes the head node and repairs tail when the queue becomes empty. */
 DsStatus queue_dequeue(Queue *q, Item *out)
 {
     if (q->head == NULL) return DS_EMPTY;
@@ -43,6 +49,7 @@ DsStatus queue_dequeue(Queue *q, Item *out)
     q->size--;
     return DS_OK;
 }
+/** Reads the head value without removing its node. */
 DsStatus queue_front(const Queue *q, Item *out)
 {
     if (q->head == NULL) return DS_EMPTY;

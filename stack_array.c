@@ -12,6 +12,7 @@ struct Stack {
   size_t cap;
 };
 
+/** Allocates an empty stack with a small initial dynamic array. */
 Stack *stack_create(void) {
   Stack *s = malloc(sizeof *s);
   if (s == NULL)
@@ -25,15 +26,19 @@ Stack *stack_create(void) {
   s->cap = STACK_INITIAL_CAPACITY;
   return s;
 }
+/** Frees the array and the stack object. */
 void stack_destroy(Stack *s) {
   if (s == NULL)
     return;
   free(s->data);
   free(s);
 }
+/** Tests whether no item is stored. */
 bool stack_is_empty(const Stack *s) { return s->size == 0; }
+/** Returns the current number of stored items. */
 size_t stack_size(const Stack *s) { return s->size; }
 
+/** Appends an item, doubling capacity when the array is full. */
 DsStatus stack_push(Stack *s, Item x) {
   if (s->size == s->cap) {
     if (s->cap > (size_t)-1 / 2 ||
@@ -48,6 +53,7 @@ DsStatus stack_push(Stack *s, Item x) {
   s->data[s->size++] = x;
   return DS_OK;
 }
+/** Removes the top item; out may be NULL when the value is not needed. */
 DsStatus stack_pop(Stack *s, Item *out) {
   if (s->size == 0)
     return DS_EMPTY;
@@ -56,6 +62,7 @@ DsStatus stack_pop(Stack *s, Item *out) {
     *out = x;
   return DS_OK;
 }
+/** Copies the top item without changing the stack. */
 DsStatus stack_top(const Stack *s, Item *out) {
   if (s->size == 0)
     return DS_EMPTY;

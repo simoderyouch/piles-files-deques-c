@@ -9,6 +9,7 @@
 /* as_char = 1 : afficher les Item comme des caracteres */
 static inline void stack_print(const char *label, Stack *s, int as_char)
 {
+    /* Move items to a temporary stack so printing preserves the input stack. */
     Stack *tmp = stack_create();
     Item x;
     while (stack_pop(s, &x) == DS_OK) stack_push(tmp, x);
@@ -22,6 +23,7 @@ static inline void stack_print(const char *label, Stack *s, int as_char)
 }
 static inline void queue_print(const char *label, Queue *q)
 {
+    /* Rotate exactly one complete pass, preserving FIFO order afterwards. */
     size_t n = queue_size(q);
     Item x;
     printf("%s[tete->queue]:", label);
@@ -34,6 +36,7 @@ static inline void queue_print(const char *label, Queue *q)
 }
 static inline void deque_print(const char *label, Deque *d)
 {
+    /* Rotate the deque once so its logical order remains unchanged. */
     size_t n = deque_size(d);
     Item x;
     printf("%s[devant->derriere]:", label);

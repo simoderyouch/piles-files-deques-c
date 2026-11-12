@@ -4,6 +4,7 @@
 #define DEQUE_INITIAL_CAPACITY 4
 struct Deque { Item *data; size_t cap; size_t head; size_t size; };
 
+/** Allocates an empty deque backed by a circular buffer. */
 Deque *deque_create(void)
 {
     Deque *d = malloc(sizeof *d);
@@ -15,9 +16,13 @@ Deque *deque_create(void)
     d->size = 0;
     return d;
 }
+/** Releases the circular buffer and deque object. */
 void deque_destroy(Deque *d) { if (d == NULL) return; free(d->data); free(d); }
+/** Tests whether the deque contains no elements. */
 bool deque_is_empty(const Deque *d) { return d->size == 0; }
+/** Returns the number of elements in the deque. */
 size_t deque_size(const Deque *d) { return d->size; }
+/** Doubles capacity and linearizes the logical front-to-back order. */
 static DsStatus grow(Deque *d)
 {
     if (d->cap > (size_t)-1 / 2 ||
@@ -33,6 +38,7 @@ static DsStatus grow(Deque *d)
     d->head = 0;
     return DS_OK;
 }
+/** Inserts x after the logical last element. */
 DsStatus deque_push_back(Deque *d, Item x)
 {
     if (d->size == d->cap) { DsStatus st = grow(d); if (st != DS_OK) return st; }
@@ -40,6 +46,7 @@ DsStatus deque_push_back(Deque *d, Item x)
     d->size++;
     return DS_OK;
 }
+/** Moves head one slot backward and stores x at the new front. */
 DsStatus deque_push_front(Deque *d, Item x)
 {
     if (d->size == d->cap) { DsStatus st = grow(d); if (st != DS_OK) return st; }
@@ -48,6 +55,7 @@ DsStatus deque_push_front(Deque *d, Item x)
     d->size++;
     return DS_OK;
 }
+/** Removes the logical first element and advances head. */
 DsStatus deque_pop_front(Deque *d, Item *out)
 {
     if (d->size == 0) return DS_EMPTY;
@@ -56,6 +64,7 @@ DsStatus deque_pop_front(Deque *d, Item *out)
     d->size--;
     return DS_OK;
 }
+/** Removes the logical last element without moving head. */
 DsStatus deque_pop_back(Deque *d, Item *out)
 {
     if (d->size == 0) return DS_EMPTY;
@@ -63,12 +72,14 @@ DsStatus deque_pop_back(Deque *d, Item *out)
     d->size--;
     return DS_OK;
 }
+/** Reads the logical first element without removing it. */
 DsStatus deque_front(const Deque *d, Item *out)
 {
     if (d->size == 0) return DS_EMPTY;
     *out = d->data[d->head];
     return DS_OK;
 }
+/** Reads the logical last element without removing it. */
 DsStatus deque_back(const Deque *d, Item *out)
 {
     if (d->size == 0) return DS_EMPTY;

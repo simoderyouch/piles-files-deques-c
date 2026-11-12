@@ -17,14 +17,18 @@
 
 typedef enum { B_OK, B_UNEXPECTED_CLOSE, B_MISMATCH, B_UNCLOSED, B_NOMEM } BErr;
 
+/** Returns nonzero for an opening delimiter. */
 static int is_open(char c) { return c == '(' || c == '[' || c == '{'; }
+/** Returns nonzero for a closing delimiter. */
 static int is_close(char c) { return c == ')' || c == ']' || c == '}'; }
 
+/** Checks whether an opening delimiter matches a closing delimiter. */
 static int match(char o, char c) {
   return (o == '(' && c == ')') || (o == '[' && c == ']') ||
          (o == '{' && c == '}');
 }
 
+/** Validates delimiters and reports the position of the first error. */
 static BErr check(const char *s, size_t *pos, size_t *open_pos) {
   Stack *st = stack_create();
   BErr res = B_OK;
@@ -59,6 +63,7 @@ static BErr check(const char *s, size_t *pos, size_t *open_pos) {
   return res;
 }
 
+/** Runs representative balanced, mismatched and unclosed-delimiter cases. */
 int main(void) {
   const char *tests[] = {"{[a+b]*(c-d)}", "([a+b)]", "((a+b)*[c-d])",
                          "{[()]}",        "([)]",    "((x), x)",

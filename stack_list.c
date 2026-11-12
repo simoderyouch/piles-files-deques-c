@@ -11,6 +11,7 @@ struct Stack {
   size_t size;
 };
 
+/** Allocates an empty stack whose first node will be the list head. */
 Stack *stack_create(void) {
   Stack *s = malloc(sizeof *s);
   if (s == NULL)
@@ -19,6 +20,7 @@ Stack *stack_create(void) {
   s->size = 0;
   return s;
 }
+/** Walks through and frees every node before freeing the stack. */
 void stack_destroy(Stack *s) {
   if (s == NULL)
     return;
@@ -30,8 +32,11 @@ void stack_destroy(Stack *s) {
   }
   free(s);
 }
+/** Tests whether the linked list has no head node. */
 bool stack_is_empty(const Stack *s) { return s->head == NULL; }
+/** Returns the number of nodes in the stack. */
 size_t stack_size(const Stack *s) { return s->size; }
+/** Creates a node and links it before the current head. */
 DsStatus stack_push(Stack *s, Item x) {
   Node *n = malloc(sizeof *n);
   if (n == NULL)
@@ -42,6 +47,7 @@ DsStatus stack_push(Stack *s, Item x) {
   s->size++;
   return DS_OK;
 }
+/** Unlinks and frees the head node; out may be NULL. */
 DsStatus stack_pop(Stack *s, Item *out) {
   if (s->head == NULL)
     return DS_EMPTY;
@@ -53,6 +59,7 @@ DsStatus stack_pop(Stack *s, Item *out) {
   s->size--;
   return DS_OK;
 }
+/** Reads the head value without unlinking its node. */
 DsStatus stack_top(const Stack *s, Item *out) {
   if (s->head == NULL)
     return DS_EMPTY;

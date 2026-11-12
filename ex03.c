@@ -27,6 +27,7 @@
 typedef struct { double *d; size_t n, cap; } DStack;
 typedef enum { R_OK, R_UNDERFLOW, R_BADTOKEN, R_DIV0, R_BADFINAL, R_NOMEM } Rc;
 
+/** Pushes a value onto the temporary dynamic stack. */
 static int dpush(DStack *s, double x)
 {
     if (s->n == s->cap) {
@@ -40,12 +41,14 @@ static int dpush(DStack *s, double x)
     s->d[s->n++] = x;
     return 0;
 }
+/** Pops one value, returning -1 when no operand is available. */
 static int dpop(DStack *s, double *x)
 {
     if (s->n == 0) return -1;
     *x = s->d[--s->n];
     return 0;
 }
+/** Prints the current postfix-evaluation stack for trace output. */
 static void dprint(const DStack *s)
 {
     printf("  pile:");
@@ -53,6 +56,7 @@ static void dprint(const DStack *s)
     printf("\n");
 }
 
+/** Parses and evaluates a whitespace-separated reverse-polish expression. */
 static Rc eval_rpn(const char *expr, double *result, int trace)
 {
     size_t len = strlen(expr);
@@ -93,6 +97,7 @@ static Rc eval_rpn(const char *expr, double *result, int trace)
     return rc;
 }
 
+/** Translates an internal evaluation status into a user-facing message. */
 static const char *msg(Rc r)
 {
     switch (r) {
@@ -105,6 +110,7 @@ static const char *msg(Rc r)
     }
 }
 
+/** Runs valid RPN examples and deliberately invalid expressions. */
 int main(void)
 {
     const char *tests[] = {

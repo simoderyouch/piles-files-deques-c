@@ -8,6 +8,7 @@
 #include "stack.h"
 
 /* ---------- Etape 3 : parentheses ---------- */
+/** Validates delimiter nesting with a stack of opening-character positions. */
 DsStatus expr_check_brackets(const char *s, size_t *err_pos)
 {
     Stack *st = stack_create();
@@ -38,6 +39,7 @@ DsStatus expr_check_brackets(const char *s, size_t *err_pos)
 }
 
 /* ---------- Etape 4 : analyse lexicale ---------- */
+/** Converts source characters into typed tokens and stores their indices. */
 DsStatus expr_tokenize(const char *s, Token *tok, size_t max, size_t *n,
                        Queue *lexemes, size_t *err_pos)
 {
@@ -98,6 +100,7 @@ DsStatus expr_tokenize(const char *s, Token *tok, size_t max, size_t *n,
 }
 
 /* ---------- Etape 5 : shunting-yard ---------- */
+/** Returns the precedence used by the shunting-yard operator stack. */
 static int prec(char op)
 {
     switch (op) {
@@ -108,8 +111,10 @@ static int prec(char op)
     default:  return 0;
     }
 }
+/** Identifies operators that associate from right to left. */
 static bool right_assoc(char op) { return op == '^'; }
 
+/** Converts infix tokens to postfix tokens using an operator stack. */
 DsStatus expr_to_postfix(const Token *tok, size_t n, Queue *lexemes, Queue *out)
 {
     Stack *ops = stack_create();
@@ -156,6 +161,7 @@ DsStatus expr_to_postfix(const Token *tok, size_t n, Queue *lexemes, Queue *out)
 
 /* ---------- Etape 6 : evaluation avec pile de double ---------- */
 typedef struct { double *d; size_t n, cap; } DStack;
+/** Pushes a real value, growing the private evaluation stack if required. */
 static int dpush(DStack *s, double x)
 {
     if (s->n == s->cap) {
@@ -170,6 +176,7 @@ static int dpush(DStack *s, double x)
     return 0;
 }
 
+/** Evaluates postfix tokens, applying operators to the two top operands. */
 DsStatus expr_eval_postfix(const Token *tok, Queue *postfix, double *result)
 {
     DStack st = { NULL, 0, 0 };
@@ -204,6 +211,7 @@ DsStatus expr_eval_postfix(const Token *tok, Queue *postfix, double *result)
     return rc;
 }
 
+/** Runs bracket checking, tokenization, conversion and evaluation as one API. */
 DsStatus expr_eval(const char *s, double *result, size_t *err_pos)
 {
     size_t n = 0, dummy = 0;
