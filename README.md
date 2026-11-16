@@ -22,9 +22,9 @@ les représentations contiguës et chaînées.
 - les options de compilation recommandées sont celles utilisées par le projet :
   `-std=c11 -Wall -Wextra -Wpedantic -Werror`.
 
-Les tests principaux sont compilés avec AddressSanitizer et UndefinedBehaviorSanitizer
-afin de détecter les fuites mémoire, les dépassements de tampon et les comportements
-indéfinis.
+La cible `make sanitize` compile les tests avec AddressSanitizer et
+UndefinedBehaviorSanitizer pour détecter les erreurs mémoire et les comportements
+indéfinis, lorsque ces outils sont pris en charge par l'environnement.
 
 ## Organisation du projet
 
@@ -46,6 +46,7 @@ indéfinis.
 | `ex03.c` | Évaluation autonome d'une expression postfixée |
 | `test_stack.c` | Tests communs des deux implémentations de pile |
 | `test_queue.c` | Tests communs des deux implémentations de file |
+| `test_deque.c` | Tests de la deque circulaire |
 | `test_expr.c` | Tests de l'évaluateur d'expressions |
 | `bench.c` | Micro-benchmark pile/file |
 | `Makefile` | Commandes de compilation, de test et de benchmark |
@@ -111,15 +112,16 @@ Les cibles prévues sont :
 ```sh
 make        # compilation et exécution des tests
 make test   # tests
+make run    # compilation et exécution des 20 exercices
 make bench  # comparaison des performances
+make sanitize # tests avec les sanitizers
 make clean  # suppression des exécutables générés
 ```
 
-À noter : la version actuelle du `Makefile` contient aussi des cibles pour des
-fichiers supplémentaires (`test_deque.c`, `deque_dll.c`, `sliding_max.c`,
-`round_robin.c`, etc.) qui ne sont pas présents dans cette copie du dépôt.
-Ainsi, `make` peut échouer avant d'exécuter les tests disponibles. Les commandes
-manuelles ci-dessus correspondent aux fichiers réellement présents.
+Les exécutables produits par le Makefile sont placés dans `.build/`.
+Si LeakSanitizer ne fonctionne pas dans un environnement sous traçage, utiliser
+`ASAN_OPTIONS=detect_leaks=0 make sanitize` pour exécuter les autres contrôles
+des sanitizers ; cette option désactive la détection des fuites.
 
 ## API des structures
 
